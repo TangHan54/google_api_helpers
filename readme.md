@@ -1,3 +1,4 @@
+```
 from google_api_helpers.gdrive_helpers import Drive
 
 import logging
@@ -55,4 +56,4 @@ drive.delete(file_id=root_file_id, query_string="mimeType='text/csv'")
 
 # empty trash
 drive.empty_trash()
-
+```
