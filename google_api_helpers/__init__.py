@@ -31,7 +31,7 @@ if bool(config_obj["google_api_parameters"]["include_gdrive"]):
 if bool(config_obj["google_api_parameters"]["include_gsheets"]):
     scopes.append("https://www.googleapis.com/auth/spreadsheets")
 if bool(config_obj["google_api_parameters"]["include_gmail"]):
-    scopes.append("https://mail.google.com/")
+    scopes.append("https://www.googleapis.com/auth/gmail.compose")
 if bool(config_obj["google_api_parameters"]["include_gdoc"]):
     scopes.append("https://www.googleapis.com/auth/documents")
 
@@ -48,14 +48,15 @@ if os.path.exists(token_path):
 if not creds or not creds.valid:
     if creds and creds.expired and creds.refresh_token:
         creds.refresh(Request())
-    else:
-        try:
-            flow = InstalledAppFlow.from_client_secrets_file(credentials_path, scopes)
-        except:
-            print("Unexpected error:", sys.exc_info()[0])
-        creds = flow.run_local_server(port=0)
+if not creds.has_scopes(scopes):
+    try:
+        flow = InstalledAppFlow.from_client_secrets_file(credentials_path, scopes)
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+    creds = flow.run_local_server(port=0)
     with open(token_path, "wb") as token:
         pickle.dump(creds, token)
-
+        
+    
 # make sure the credentials are not empty.
 assert creds != None, "credential is not found. Check your configuration!"

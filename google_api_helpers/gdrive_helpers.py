@@ -44,7 +44,7 @@ from google.auth.transport.requests import Request
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 
 # load conf
-from apipkg import creds
+from google_api_helpers import creds
 
 # logger
 import logging

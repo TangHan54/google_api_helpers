@@ -1,3 +1,22 @@
+# Google API Helpers
+
+### Gmail Helpers
+```
+from google_api_helpers.gmail_helpers import Mail
+
+mail = Mail()
+
+mail.send_gmail(
+    sender = '',
+    to = ['test@gmail.com'],
+    cc = [],
+    bcc = [],
+    subject = 'test',
+    message_text = 'test content',
+    attachments = ['file1.csv']
+)
+```
+### Drive Helpers
 ```
 from google_api_helpers.gdrive_helpers import Drive
 
