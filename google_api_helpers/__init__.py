@@ -48,7 +48,7 @@ if os.path.exists(token_path):
 if not creds or not creds.valid:
     if creds and creds.expired and creds.refresh_token:
         creds.refresh(Request())
-if not creds.has_scopes(scopes):
+if not creds or not creds.has_scopes(scopes):
     try:
         flow = InstalledAppFlow.from_client_secrets_file(credentials_path, scopes)
     except:
