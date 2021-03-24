@@ -116,9 +116,7 @@ class Drive:
             return None, None
 
         # search file exclude trash
-        found_file_name, found_file_id = _search(
-            q=query_string + " and trashed=False"
-        )
+        found_file_name, found_file_id = _search(q=query_string + " and trashed=False")
         if not found_file_id:
             logger.info("The file {} does not exist Trash excluded.".format(file_name))
         return found_file_name, found_file_id
@@ -203,7 +201,7 @@ class Drive:
             self.service.files().delete(fileId=file_id).execute()
             logger.info("Delete successful.")
         except:
-            logger.error("Unexpected Error", exc_info=True) 
+            logger.error("Unexpected Error", exc_info=True)
 
     def download_folder(self, folder_name: str = None, folder_id: str = None):
         assert (
@@ -214,7 +212,9 @@ class Drive:
         # the same for upload a folder.
         pass
 
-    def upload_folder(self, local_folder_path: str, target_folder_name:str=None, parents: list = []):
+    def upload_folder(
+        self, local_folder_path: str, target_folder_name: str = None, parents: list = []
+    ):
         """
         upload a whole folder with its descendants(files only) to Google drive.
 
@@ -226,15 +226,20 @@ class Drive:
         :type parents: list, optional
         """
         if not target_folder_name:
-            target_folder_name = local_folder_path.split('/')[-1]
-        target_folder_id = self.create_folder(folder_name=target_folder_name, parents=parents)
-        files = [local_folder_path + '/' + f for f in listdir(local_folder_path) if isfile(join(local_folder_path, f))]
-        
-        _,_ = self.upload_files(files, parents=[target_folder_id])
-        
+            target_folder_name = local_folder_path.split("/")[-1]
+        target_folder_id = self.create_folder(
+            folder_name=target_folder_name, parents=parents
+        )
+        files = [
+            local_folder_path + "/" + f
+            for f in listdir(local_folder_path)
+            if isfile(join(local_folder_path, f))
+        ]
+
+        _, _ = self.upload_files(files, parents=[target_folder_id])
+
         logger.info("Folder uploading completed.")
         return target_folder_id
-
 
     def upload_file(
         self,
@@ -258,12 +263,12 @@ class Drive:
         :rtype: str
         """
         if not drive_file_name:
-            drive_file_name = local_file_path.split('/')[0]
+            drive_file_name = local_file_path.split("/")[0]
         file_metadata = {
             "name": drive_file_name,
         }
         if mimetype:
-            media = MediaFileUpload(local_file_path, mimetype = mimetype,resumable=True)
+            media = MediaFileUpload(local_file_path, mimetype=mimetype, resumable=True)
         else:
             media = MediaFileUpload(local_file_path, resumable=True)
         if parents:
@@ -322,8 +327,7 @@ class Drive:
                 )
                 file_ids.append(file_id)
             except:
-                logger.error(
-                    "Unable to upload file {}. ".format(f), exc_info=True)
+                logger.error("Unable to upload file {}. ".format(f), exc_info=True)
                 failed_files.append(f)
 
         if len(file_ids) > 0:
@@ -335,19 +339,23 @@ class Drive:
     def empty_trash(self):
         self.service.files().emptyTrash().execute()
 
-    def download_file(self, file_id:str, file_name:str, download_to:str=os.path.join(os.path.expanduser('~'), 'Downloads')):
-        request = self.service.files().get_media(fileId = file_id)
+    def download_file(
+        self,
+        file_id: str,
+        file_name: str,
+        download_to: str = os.path.join(os.path.expanduser("~"), "Downloads"),
+    ):
+        request = self.service.files().get_media(fileId=file_id)
         fh = io.BytesIO()
         downloader = MediaIoBaseDownload(fh, request)
         done = False
         while done is False:
             status, done = downloader.next_chunk()
             print("Download %d%%." % int(status.progress() * 100))
-        
-        with open(download_to + '/' + file_name, 'wb') as f:
+
+        with open(download_to + "/" + file_name, "wb") as f:
             f.write(fh.getbuffer())
-        logger.info('Completed downloading {}'.format(file_name))
+        logger.info("Completed downloading {}".format(file_name))
 
-
-    def download_files(self, file_ids:list, download_to:str):
+    def download_files(self, file_ids: list, download_to: str):
         pass

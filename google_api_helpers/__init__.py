@@ -56,7 +56,7 @@ if not creds.has_scopes(scopes):
     creds = flow.run_local_server(port=0)
     with open(token_path, "wb") as token:
         pickle.dump(creds, token)
-        
-    
+
+
 # make sure the credentials are not empty.
 assert creds != None, "credential is not found. Check your configuration!"

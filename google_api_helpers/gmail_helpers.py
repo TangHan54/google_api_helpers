@@ -13,18 +13,28 @@ from googleapiclient import discovery
 
 from google_api_helpers import creds
 
+
 class Mail:
     def __init__(self):
         self.service = discovery.build("gmail", "v1", credentials=creds)
 
-    def send_gmail(self, sender='', to=[], cc=[], bcc=[], subject='', message_text='', attachments=[]):
+    def send_gmail(
+        self,
+        sender="",
+        to=[],
+        cc=[],
+        bcc=[],
+        subject="",
+        message_text="",
+        attachments=[],
+    ):
         # create message object
         message = MIMEMultipart()
         message["from"] = sender
         message["to"] = ",".join(to)
         message["cc"] = ",".join(cc)
         message["bcc"] = ",".join(bcc)
-        
+
         message["subject"] = subject
 
         msg = MIMEText(message_text, "html")
@@ -56,6 +66,10 @@ class Mail:
             msg.add_header("Content-Disposition", "attachment", filename=filename)
             message.attach(msg)
 
-        message = {"raw": base64.urlsafe_b64encode(message.as_string().encode()).decode()}
+        message = {
+            "raw": base64.urlsafe_b64encode(message.as_string().encode()).decode()
+        }
 
-        message = self.service.users().messages().send(userId="me", body=message).execute()
+        message = (
+            self.service.users().messages().send(userId="me", body=message).execute()
+        )
