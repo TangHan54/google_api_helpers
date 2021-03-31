@@ -2,6 +2,7 @@ import base64
 import smtplib
 import mimetypes
 
+from email import encoders
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -62,6 +63,7 @@ class Mail:
                 msg = MIMEBase(main_type, sub_type)
                 msg.set_payload(fp.read())
                 fp.close()
+            encoders.encode_base64(msg)
             filename = os.path.basename(file)
             msg.add_header("Content-Disposition", "attachment", filename=filename)
             message.attach(msg)
