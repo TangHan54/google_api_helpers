@@ -18,7 +18,7 @@ from google_api_helpers import creds, default_sender
 
 class Mail:
     def __init__(self):
-        self.service = discovery.build("gmail", "v1", credentials=creds)
+        self.service = discovery.build("gmail", "v1", credentials=creds, cache_discovery=False)
 
     def send_gmail(
         self,
