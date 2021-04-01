@@ -1,3 +1,4 @@
+import os
 import base64
 import smtplib
 import mimetypes
@@ -12,7 +13,7 @@ from email.mime.image import MIMEImage
 
 from googleapiclient import discovery
 
-from google_api_helpers import creds
+from google_api_helpers import creds, default_sender
 
 
 class Mail:
@@ -21,7 +22,7 @@ class Mail:
 
     def send_gmail(
         self,
-        sender="",
+        sender=[default_sender],
         to=[],
         cc=[],
         bcc=[],

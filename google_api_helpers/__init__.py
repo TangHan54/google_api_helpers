@@ -57,6 +57,8 @@ if not creds or not creds.has_scopes(scopes):
     with open(token_path, "wb") as token:
         pickle.dump(creds, token)
 
+# default gmail sender
+default_sender = config_obj['gmail_parameter']['default_sender']
 
 # make sure the credentials are not empty.
 assert creds != None, "credential is not found. Check your configuration!"
