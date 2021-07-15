@@ -56,6 +56,20 @@ class Drive:
     def __init__(self):
         self.service = build("drive", "v3", credentials=creds, cache_discovery=False)
 
+    def list_all_files(self):
+        page_token = None
+        all_files = []
+        while True:
+            response = self.service.files().list(q="",
+                                                spaces='drive',
+                                                fields='nextPageToken, files(id, name)',
+                                                pageToken=page_token).execute()
+            all_files = all_files + response.get('files', [])
+            page_token = response.get('nextPageToken', None)
+            if page_token is None:
+                break
+        return all_files
+
     def search(
         self,
         file_name: str = None,
