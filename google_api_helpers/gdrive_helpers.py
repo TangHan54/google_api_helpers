@@ -33,7 +33,7 @@ import datetime
 import numpy as np
 import pandas as pd
 
-from os import listdir
+from os import access, listdir
 from os.path import isfile, join
 
 # Google API
@@ -373,3 +373,24 @@ class Drive:
 
     def download_files(self, file_ids: list, download_to: str):
         pass
+
+    def share_file_access(self, target_email_address, file_id:str, access_role:str="writer"):
+        def _callback(request_id, response, exception):
+            if exception:
+                # Handle error
+                print(exception)
+            else:
+                print("Permission Id: %s" % response.get('id'))
+
+        batch = self.service.new_batch_http_request(callback=_callback)
+        user_permission = {
+            'type': 'user',
+            'role': access_role,
+            'emailAddress': target_email_address
+        }
+        batch.add(self.service.permissions().create(
+                fileId=file_id,
+                body=user_permission,
+                fields='id',
+        ))
+        batch.execute()
